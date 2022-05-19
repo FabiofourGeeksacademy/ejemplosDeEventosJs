@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1>lista de compra</h1>
+        <input type="text" id="elemento">
+        <button onclick="agregar()" id="myBtn">Agregar</button>
+        <ul id="lista"></ul>
+    </div>
+
+
+    <script>
+        window.onload = function load() {
+            alert("Bienvenidos");
+        }
+        //funciones
+        let Enter = (input) => {
+            console.log("pase")
+            input.addEventListener("keypress", function (event) {
+                if (event.key === "Enter" && input.id === "elemento") {
+                    event.preventDefault();
+                    document.getElementById("myBtn").click();
+                    input.value = "";
+                }
+                if (event.key === "Enter" && input.id === "edit") {
+                    event.preventDefault();
+                    let elemento = document.getElementsByClassName("myBtn activo");
+
+                    editar(elemento[0]);
+                }
+            });
+        }
+
+        let agregar = () => {
+            let lista = document.getElementById("lista");
+            let elemento = document.getElementById("elemento");
+            lista.innerHTML += `<li> 
+                    <span class="elemento">${elemento.value}</span>
+                    ${Editar}
+                    ${Eliminar}
+                    ${Copiar}
+                </li>`
+        }
+
+        let eliminar = (elemento) => {
+            elemento.parentNode.remove();
+        }
+
+        let editar = (elemento) => {
+            elemento.classList.toggle("activo");
+            let clases = elemento.className;
+            if (clases.includes("activo")) {
+                let span = elemento.parentNode.children[0]
+                elemento.parentNode.children[2].disabled = true;
+                elemento.parentNode.children[3].disabled = true;
+                let texto = span.textContent;
+                const newInput = document.createElement('input');
+                newInput.id = "edit";
+                newInput.value = texto;
+                Enter(newInput)
+                elemento.parentNode.replaceChild(newInput, span);
+            } else {
+                let input = elemento.parentNode.children[0]
+                elemento.parentNode.children[2].disabled = false;
+                elemento.parentNode.children[3].disabled = false;
+                const newSpan = document.createElement('span');
+                newSpan.textContent = input.value;
+                elemento.parentNode.replaceChild(newSpan, input);
+            }
+        }
+
+        function copiarAlPortapapeles(elemento) {
+            var aux = document.createElement("input");
+            aux.setAttribute("value", elemento.parentNode.children[0].innerHTML);
+            document.body.appendChild(aux);
+            aux.select();
+            document.execCommand("copy");
+            document.body.removeChild(aux);
+        }
+
+        const Editar = `<button onclick="editar(this)" class="myBtn">editar</button>`;
+        const Eliminar = `<button onclick="eliminar(this)" class="myBtn">eliminar</button>`;
+        const Copiar = `<button onclick="copiarAlPortapapeles(this)" class="myBtn">copiar</button>`;
+        const input = document.getElementById("elemento");
+        Enter(input);
+    </script>
+
+
+</body>
+
+</html>
